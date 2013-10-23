@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 import requests
 from requests_oauthlib import OAuth1
 from urlparse import parse_qs
+import json
+import sys
 
 REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
 AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize?oauth_token="
@@ -59,5 +61,9 @@ if __name__ == "__main__":
         print
     else:
         oauth = get_oauth()
-        r = requests.get(url="https://api.twitter.com/1.1/statuses/mentions_timeline.json", auth=oauth)
-        print r.json()
+        r = requests.get(url="https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2", auth=oauth)
+        #r = requests.get(url="https://api.twitter.com/1.1/statuses/mentions_timeline.json", auth=oauth)
+        print len(r.json())
+        print "\n"
+        print r.json()[0]['text'];
+
