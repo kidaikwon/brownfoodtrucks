@@ -1,0 +1,45 @@
+html {
+  height:100%
+}
+body { 
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+}
+#map-canvas { 
+  height: 100%;
+  padding:10px;
+}
+#title {
+  font:40px Ostrich Sans,sans-serif;
+  font-weight:bold;
+  margin:0px;
+}
+div#sidebar {
+  float:right;
+  padding:10px;
+  width:22%;
+  height:100%;
+  background-image:url("../images/crisp_paper_ruffles.png");
+}
+#sidebar table{
+  width:100%;
+  border-collapse:collapse;
+  border-spacing: 0;
+}
+#sidebar td{
+  font-family:helvetica,arial,sans-serif;
+  font-size:16px;
+  font-weight:100;
+}
+#sidebar #pin{
+  width:50px;
+}
+#sidebar #pin img{
+  width:35px;
+  height:35px;
+}
+#sidebar #pin img:hover{
+  width:40px;
+  height:40px;
+}

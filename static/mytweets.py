@@ -1,0 +1,69 @@
+from __future__ import unicode_literals
+import requests
+from requests_oauthlib import OAuth1
+from urlparse import parse_qs
+import json
+import sys
+
+REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
+AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize?oauth_token="
+ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token"
+
+CONSUMER_KEY = "3Fz2pcRRBfJoR8FebGlr2Q"
+CONSUMER_SECRET = "LtMTDjDCkAMHXvUiPN5XRdpTsOjNEXm6WAWoM4qSK04"
+
+OAUTH_TOKEN = "1969824223-2cjPU0WXJlJylZxjjkLN3xd9aJrfc6tOVoR7dEg"
+OAUTH_TOKEN_SECRET = "oT1EjJnZ4W4HTc1w1ktc9YoJK6aNO3SYrgG8SzC0e4aw1"
+
+
+def setup_oauth():
+    """Authorize your app via identifier."""
+    # Request token
+    oauth = OAuth1(CONSUMER_KEY, client_secret=CONSUMER_SECRET)
+    r = requests.post(url=REQUEST_TOKEN_URL, auth=oauth)
+    credentials = parse_qs(r.content)
+
+    resource_owner_key = credentials.get('oauth_token')[0]
+    resource_owner_secret = credentials.get('oauth_token_secret')[0]
+
+    # Authorize
+    authorize_url = AUTHORIZE_URL + resource_owner_key
+    print 'Please go here and authorize: ' + authorize_url
+
+    verifier = raw_input('Please input the verifier: ')
+    oauth = OAuth1(CONSUMER_KEY,
+                   client_secret=CONSUMER_SECRET,
+                   resource_owner_key=resource_owner_key,
+                   resource_owner_secret=resource_owner_secret,
+                   verifier=verifier)
+
+    # Finally, Obtain the Access Token
+    r = requests.post(url=ACCESS_TOKEN_URL, auth=oauth)
+    credentials = parse_qs(r.content)
+    token = credentials.get('oauth_token')[0]
+    secret = credentials.get('oauth_token_secret')[0]
+
+    return token, secret
+
+
+def get_oauth():
+    oauth = OAuth1(CONSUMER_KEY,
+                client_secret=CONSUMER_SECRET,
+                resource_owner_key=OAUTH_TOKEN,
+                resource_owner_secret=OAUTH_TOKEN_SECRET)
+    return oauth
+
+if __name__ == "__main__":
+    if not OAUTH_TOKEN:
+        token, secret = setup_oauth()
+        print "OAUTH_TOKEN: " + token
+        print "OAUTH_TOKEN_SECRET: " + secret
+        print
+    else:
+        oauth = get_oauth()
+        r = requests.get(url="https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2", auth=oauth)
+        #r = requests.get(url="https://api.twitter.com/1.1/statuses/mentions_timeline.json", auth=oauth)
+        print len(r.json())
+        print "\n"
+        print r.json()[0]['text'];
+
